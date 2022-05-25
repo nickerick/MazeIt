@@ -5,12 +5,14 @@ mazeGraph = nx.Graph()
 # Import array from photoprocessing
 # import(mazeArray) from photoprocessesing
          
+# NOTE Python 2d array scuffed... exampleArray[i][j] = col x row   AND NOT   row x col
+
 # Test array
-mazeArray = [[2, 1, 0, 3, 0, 0, 0, 0, 0, 0],
-             [1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
-             [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],                       
+mazeArray = [[2, 1, 0, 3, 1, 1, 0, 0, 0, 0],
+             [1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+             [1, 1, 0, 1, 1, 1, 1, 0, 0, 0],
+             [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+             [0, 1, 1, 1, 1, 1, 1, 0, 0, 0],                       
              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -18,7 +20,20 @@ mazeArray = [[2, 1, 0, 3, 0, 0, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]                                                      
 
 
-def processColor(mazeBlockValue):
+def printSolvedMaze():
+    print(solvedMazeArray[0])
+    print(solvedMazeArray[1])
+    print(solvedMazeArray[2])
+    print(solvedMazeArray[3])
+    print(solvedMazeArray[4])
+    print(solvedMazeArray[5])
+    print(solvedMazeArray[6])
+    print(solvedMazeArray[7])
+    print(solvedMazeArray[8])
+    print(solvedMazeArray[9])
+
+
+def processColor(mazeBlockValue, mazeBlockIndex):
     if (mazeBlockValue == 0):
         return "black"
     elif (mazeBlockValue == 1):
@@ -31,11 +46,19 @@ def processColor(mazeBlockValue):
 
 # Initializing each node in graph with its color value
 currIndex = 0
+startIndex = 0
+endIndex = 0
 
 for i in range(10):
     for j in range(10):
-        blockColor = processColor(mazeArray[i][j])
+        blockColor = processColor(mazeArray[i][j], currIndex)
         mazeGraph.add_node(currIndex, color=blockColor)
+        
+        if blockColor == "green":
+            startIndex = currIndex
+        elif blockColor == "red":
+            endIndex = currIndex
+
         currIndex += 1
 
 
@@ -73,17 +96,27 @@ for i in range(10):
         currIndex += 1
 
 
-mazePath = nx.shortest_path(mazeGraph, 0, 3)
-print(mazePath)
+mazePath = nx.shortest_path(mazeGraph, startIndex, endIndex)
 
 
-# print(type(nx.get_node_attributes(mazeGraph, "color")))
+solvedMazeArray = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],                       
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]  
 
-# colorValueArray[10]
-# for colorValue in nx.get_node_attributes(mazeGraph, "color").items:
-#     if (colorValue == "green" | "red"):
-#         colorValueArray.add(colorValue)
 
-# Error Handling
-# mazeHasPath = nx.has_path(mazeGraph, )
+currIndex = 0
+for i in range(10):
+    for j in range(10):
+        if currIndex in mazePath:
+            solvedMazeArray[i][j] = 1
 
+        currIndex += 1
+
+printSolvedMaze()
