@@ -1,3 +1,4 @@
+from tracemalloc import start
 import networkx as nx
 
 mazeGraph = nx.Graph()
@@ -19,8 +20,19 @@ mazeArray = [[2, 1, 0, 3, 1, 1, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]                                                      
 
+# Test array 2
+mazeArray = [[2, 1, 0, 1, 1, 1, 0, 0, 0, 0],
+             [1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+             [1, 1, 0, 1, 1, 1, 1, 0, 0, 0],
+             [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+             [0, 1, 1, 1, 1, 1, 1, 0, 0, 0],                       
+             [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+             [0, 1, 1, 1, 1, 0, 1, 0, 0, 0],
+             [0, 0, 0, 1, 0, 3, 1, 0, 0, 0],
+             [0, 0, 0, 1, 0, 1, 1, 0, 0, 0],
+             [0, 0, 0, 1, 1, 1, 0, 0, 0, 0]]
 
-def printSolvedMaze():
+def printSolvedMaze(solvedMazeArray):
     print(solvedMazeArray[0])
     print(solvedMazeArray[1])
     print(solvedMazeArray[2])
@@ -115,8 +127,9 @@ currIndex = 0
 for i in range(10):
     for j in range(10):
         if currIndex in mazePath:
-            solvedMazeArray[i][j] = 1
+            if (currIndex != startIndex and currIndex != endIndex):
+                mazeArray[i][j] = 4
 
         currIndex += 1
 
-printSolvedMaze()
+printSolvedMaze(mazeArray)
