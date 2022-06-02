@@ -1,5 +1,6 @@
 from tracemalloc import start
 import networkx as nx
+from photo_processing import maze_array as mazeArray
 
 mazeGraph = nx.Graph()
 
@@ -9,28 +10,28 @@ mazeGraph = nx.Graph()
 # NOTE Python 2d array scuffed... exampleArray[i][j] = col x row   AND NOT   row x col
 
 # Test array
-mazeArray = [[2, 1, 0, 3, 1, 1, 0, 0, 0, 0],
-             [1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
-             [1, 1, 0, 1, 1, 1, 1, 0, 0, 0],
-             [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
-             [0, 1, 1, 1, 1, 1, 1, 0, 0, 0],                       
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]                                                      
+# mazeArray = [[2, 1, 0, 3, 1, 1, 0, 0, 0, 0],
+#              [1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+#              [1, 1, 0, 1, 1, 1, 1, 0, 0, 0],
+#              [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+#              [0, 1, 1, 1, 1, 1, 1, 0, 0, 0],                       
+#              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]                                                      
 
-# Test array 2
-mazeArray = [[2, 1, 0, 1, 1, 1, 0, 0, 0, 0],
-             [1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
-             [1, 1, 0, 1, 1, 1, 1, 0, 0, 0],
-             [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
-             [0, 1, 1, 1, 1, 1, 1, 0, 0, 0],                       
-             [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
-             [0, 1, 1, 1, 1, 0, 1, 0, 0, 0],
-             [0, 0, 0, 1, 0, 3, 1, 0, 0, 0],
-             [0, 0, 0, 1, 0, 1, 1, 0, 0, 0],
-             [0, 0, 0, 1, 1, 1, 0, 0, 0, 0]]
+# # Test array 2
+# mazeArray = [[2, 1, 0, 1, 1, 1, 0, 0, 0, 0],
+#              [1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+#              [1, 1, 0, 1, 1, 1, 1, 0, 0, 0],
+#              [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+#              [0, 1, 1, 1, 1, 1, 1, 0, 0, 0],                       
+#              [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+#              [0, 1, 1, 1, 1, 0, 1, 0, 0, 0],
+#              [0, 0, 0, 1, 0, 3, 1, 0, 0, 0],
+#              [0, 0, 0, 1, 0, 1, 1, 0, 0, 0],
+#              [0, 0, 0, 1, 1, 1, 0, 0, 0, 0]]
 
 def printSolvedMaze(solvedMazeArray):
     print(solvedMazeArray[0])
@@ -82,34 +83,39 @@ currIndex = 0
 for i in range(10):
     for j in range(10):
         try:
-            if (mazeArray[i][j-1] != 0 and mazeArray[i][j] != 0):
+            if (mazeArray[i][j-1] != 0 and mazeArray[i][j] != 0 and currIndex % 10 != 0):
                 mazeGraph.add_edge(currIndex - 1, currIndex)
+                
         except:
             print("error")
 
         try:
             if (mazeArray[i][j+1] != 0 and mazeArray[i][j] != 0):
                 mazeGraph.add_edge(currIndex + 1, currIndex)
+               
         except:
             0
 
         try:
             if (mazeArray[i-1][j] != 0 and mazeArray[i][j] != 0):
                 mazeGraph.add_edge(currIndex - 10, currIndex)
+
         except:
             0
 
         try:
-            if (mazeArray[i+1][j] != 0 and mazeArray[i][j] != 0):
+            if (mazeArray[i+1][j] != 0 and mazeArray[i][j] != 0 and currIndex % 10 != 9):
                 mazeGraph.add_edge(currIndex + 10, currIndex)
+
         except:
             0    
 
         currIndex += 1
 
 
-mazePath = nx.shortest_path(mazeGraph, startIndex, endIndex)
 
+mazePath = nx.shortest_path(mazeGraph, startIndex, endIndex)
+print(mazeGraph.edges)
 
 solvedMazeArray = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -132,4 +138,4 @@ for i in range(10):
 
         currIndex += 1
 
-printSolvedMaze(mazeArray)
+# printSolvedMaze(mazeArray)

@@ -1,6 +1,7 @@
 # Import the required libraries
 from tkinter import *
 from tkinter import ttk
+from turtle import update
 from graph_operations import mazeArray as solvedMazeArray
 
 from matplotlib.pyplot import fill
@@ -185,20 +186,6 @@ mazeBlockList.extend([mazeBlock0, mazeBlock1, mazeBlock2, mazeBlock3, mazeBlock4
                     mazeBlock80, mazeBlock81, mazeBlock82, mazeBlock83, mazeBlock84, mazeBlock85, mazeBlock86, mazeBlock87, mazeBlock88, mazeBlock89,
                     mazeBlock90, mazeBlock91, mazeBlock92, mazeBlock93, mazeBlock94, mazeBlock95, mazeBlock96, mazeBlock97, mazeBlock98, mazeBlock99])
 
-# mazeCanvas.itemconfig(mazeBlock34, fill='black')
-
-# TODO this needs to be imported from graphopertations in the future TODO
-# solvedMazeArray = [[2, 1, 0, 3, 1, 1, 0, 0, 0, 0],
-#                    [4, 0, 1, 4, 0, 1, 0, 0, 0, 0],
-#                    [4, 4, 0, 4, 4, 1, 1, 0, 0, 0],
-#                    [0, 4, 0, 0, 4, 0, 1, 0, 0, 0],
-#                    [0, 4, 4, 4, 4, 1, 1, 0, 0, 0],
-#                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]  
-
 currBlockIndex = 0
 for block in mazeBlockList:
     i = ((int)(currBlockIndex / 10)) % 10
@@ -212,21 +199,36 @@ for block in mazeBlockList:
     elif (solvedMazeArray[i][j] == 2):
         color = 'green'
     elif (solvedMazeArray[i][j] == 3):
-        color = 'red'    
+        color = 'red'
     elif (solvedMazeArray[i][j] == 4):
-        color = 'blue'
+        color = 'white'        
 
     mazeCanvas.itemconfig(block, fill=color)
     currBlockIndex += 1
 
-# for i in range(10):
-#     for j in range(10):
-#         blockId = "mazeBlock" + str(currBlockIndex)
-#         print(blockId)
-#         mazeCanvas.itemconfig([f"mazeBlock{currBlockIndex}"], fill='black')
-#         currBlockIndex += 1
+def updateMaze():
+    currBlockIndex = 0
+    for block in mazeBlockList:
+        i = ((int)(currBlockIndex / 10)) % 10
+        j = currBlockIndex % 10
+        color = ''
 
+        if (solvedMazeArray[i][j] == 0):
+            color = 'black'
+        elif (solvedMazeArray[i][j] == 1):
+            color = 'white'
+        elif (solvedMazeArray[i][j] == 2):
+            color = 'green'
+        elif (solvedMazeArray[i][j] == 3):
+            color = 'red'    
+        elif (solvedMazeArray[i][j] == 4):
+            color = 'blue'
 
-# Create a Button to Disable the Combobox Widget
-# ttk.Button(win, text="Change Color", command=change_color).pack()
+        mazeCanvas.itemconfig(block, fill=color)
+        currBlockIndex += 1
+      
+
+update_button = Button(win, text='Solve Maze', command= updateMaze)
+update_button.grid(column=3, row=3)
+
 win.mainloop()
