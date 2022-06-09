@@ -1,6 +1,6 @@
 from tracemalloc import start
 import networkx as nx
-from photo_processing import maze_array as mazeArray
+#from photo_processing import maze_array as mazeArray
 
 mazeGraph = nx.Graph()
 
@@ -57,85 +57,89 @@ def processColor(mazeBlockValue, mazeBlockIndex):
         return "red"
 
 
-# Initializing each node in graph with its color value
-currIndex = 0
-startIndex = 0
-endIndex = 0
+def performGraphOperations(mazeArray):
 
-for i in range(10):
-    for j in range(10):
-        blockColor = processColor(mazeArray[i][j], currIndex)
-        mazeGraph.add_node(currIndex, color=blockColor)
-        
-        if blockColor == "green":
-            startIndex = currIndex
-        elif blockColor == "red":
-            endIndex = currIndex
+    # Initializing each node in graph with its color value
+    currIndex = 0
+    startIndex = 0
+    endIndex = 0
 
-        currIndex += 1
+    for i in range(10):
+        for j in range(10):
+            blockColor = processColor(mazeArray[i][j], currIndex)
+            mazeGraph.add_node(currIndex, color=blockColor)
+            
+            if blockColor == "green":
+                startIndex = currIndex
+            elif blockColor == "red":
+                endIndex = currIndex
+
+            currIndex += 1
 
 
-# Initializing the edges between each non-black node (0 == black). Only looks for the 4 directly 
-# touching neighbors instead of all 8 surrounding neighbors. Uses try catch statements to work 
-# around making a bigger array. Otherwise, I'd have to worry about catching IndexOutOfBounds exceptions.
-currIndex = 0
+    # Initializing the edges between each non-black node (0 == black). Only looks for the 4 directly 
+    # touching neighbors instead of all 8 surrounding neighbors. Uses try catch statements to work 
+    # around making a bigger array. Otherwise, I'd have to worry about catching IndexOutOfBounds exceptions.
+    currIndex = 0
 
-for i in range(10):
-    for j in range(10):
-        try:
-            if (mazeArray[i][j-1] != 0 and mazeArray[i][j] != 0 and currIndex % 10 != 0):
-                mazeGraph.add_edge(currIndex - 1, currIndex)
+    for i in range(10):
+        for j in range(10):
+            try:
+                if (mazeArray[i][j-1] != 0 and mazeArray[i][j] != 0 and currIndex % 10 != 0):
+                    mazeGraph.add_edge(currIndex - 1, currIndex)
+                    
+            except:
+                print("error")
+
+            try:
+                if (mazeArray[i][j+1] != 0 and mazeArray[i][j] != 0):
+                    mazeGraph.add_edge(currIndex + 1, currIndex)
                 
-        except:
-            print("error")
+            except:
+                0
 
-        try:
-            if (mazeArray[i][j+1] != 0 and mazeArray[i][j] != 0):
-                mazeGraph.add_edge(currIndex + 1, currIndex)
-               
-        except:
-            0
+            try:
+                if (mazeArray[i-1][j] != 0 and mazeArray[i][j] != 0):
+                    mazeGraph.add_edge(currIndex - 10, currIndex)
 
-        try:
-            if (mazeArray[i-1][j] != 0 and mazeArray[i][j] != 0):
-                mazeGraph.add_edge(currIndex - 10, currIndex)
+            except:
+                0
 
-        except:
-            0
+            try:
+                if (mazeArray[i+1][j] != 0 and mazeArray[i][j] != 0 and currIndex % 10 != 9):
+                    mazeGraph.add_edge(currIndex + 10, currIndex)
 
-        try:
-            if (mazeArray[i+1][j] != 0 and mazeArray[i][j] != 0 and currIndex % 10 != 9):
-                mazeGraph.add_edge(currIndex + 10, currIndex)
+            except:
+                0    
 
-        except:
-            0    
-
-        currIndex += 1
+            currIndex += 1
 
 
 
-mazePath = nx.shortest_path(mazeGraph, startIndex, endIndex)
-print(mazeGraph.edges)
+    mazePath = nx.shortest_path(mazeGraph, startIndex, endIndex)
+    print(mazeGraph.edges)
 
-solvedMazeArray = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],                       
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]  
+    solvedMazeArray = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],                       
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]  
 
 
-currIndex = 0
-for i in range(10):
-    for j in range(10):
-        if currIndex in mazePath:
-            if (currIndex != startIndex and currIndex != endIndex):
-                mazeArray[i][j] = 4
+    currIndex = 0
+    for i in range(10):
+        for j in range(10):
+            if currIndex in mazePath:
+                if (currIndex != startIndex and currIndex != endIndex):
+                    mazeArray[i][j] = 4
 
-        currIndex += 1
+            currIndex += 1
+
+    return mazeArray
 
 # printSolvedMaze(mazeArray)

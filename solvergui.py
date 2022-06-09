@@ -2,7 +2,8 @@
 from tkinter import *
 from tkinter import ttk
 from turtle import update
-from graph_operations import mazeArray as solvedMazeArray
+#from graph_operations import mazeArray as solvedMazeArray
+import photo_processing
 
 from matplotlib.pyplot import fill
 
@@ -12,7 +13,6 @@ win = Tk()
 win.title('Maze Solver')
 win['bg']='#5a5f69'
 win.geometry("1920x1000")
-
 
 win.columnconfigure(0, weight=1)
 win.columnconfigure(1, weight=4)
@@ -28,7 +28,6 @@ win.rowconfigure(5, weight=2)
 win.rowconfigure(6, weight=1)
 win.rowconfigure(7, weight=2)
 win.rowconfigure(8, weight=1)
-
 
 # Define a function to change the state of the Widget
 def change_color():
@@ -186,25 +185,28 @@ mazeBlockList.extend([mazeBlock0, mazeBlock1, mazeBlock2, mazeBlock3, mazeBlock4
                     mazeBlock80, mazeBlock81, mazeBlock82, mazeBlock83, mazeBlock84, mazeBlock85, mazeBlock86, mazeBlock87, mazeBlock88, mazeBlock89,
                     mazeBlock90, mazeBlock91, mazeBlock92, mazeBlock93, mazeBlock94, mazeBlock95, mazeBlock96, mazeBlock97, mazeBlock98, mazeBlock99])
 
-currBlockIndex = 0
-for block in mazeBlockList:
-    i = ((int)(currBlockIndex / 10)) % 10
-    j = currBlockIndex % 10
-    color = ''
+def importMaze():
+    global solvedMazeArray
+    solvedMazeArray = photo_processing.importImage()
+    currBlockIndex = 0
+    for block in mazeBlockList:
+        i = ((int)(currBlockIndex / 10)) % 10
+        j = currBlockIndex % 10
+        color = ''
 
-    if (solvedMazeArray[i][j] == 0):
-        color = 'black'
-    elif (solvedMazeArray[i][j] == 1):
-        color = 'white'
-    elif (solvedMazeArray[i][j] == 2):
-        color = 'green'
-    elif (solvedMazeArray[i][j] == 3):
-        color = 'red'
-    elif (solvedMazeArray[i][j] == 4):
-        color = 'white'        
+        if (solvedMazeArray[i][j] == 0):
+            color = 'black'
+        elif (solvedMazeArray[i][j] == 1):
+            color = 'white'
+        elif (solvedMazeArray[i][j] == 2):
+            color = 'green'
+        elif (solvedMazeArray[i][j] == 3):
+            color = 'red'
+        elif (solvedMazeArray[i][j] == 4):
+            color = 'white'        
 
-    mazeCanvas.itemconfig(block, fill=color)
-    currBlockIndex += 1
+        mazeCanvas.itemconfig(block, fill=color)
+        currBlockIndex += 1
 
 def updateMaze():
     currBlockIndex = 0
@@ -226,9 +228,11 @@ def updateMaze():
 
         mazeCanvas.itemconfig(block, fill=color)
         currBlockIndex += 1
-      
 
+
+import_button = Button(win, text='Import Maze', command= importMaze)
 update_button = Button(win, text='Solve Maze', command= updateMaze)
+import_button.grid(column=2, row=3)
 update_button.grid(column=3, row=3)
 
 win.mainloop()
