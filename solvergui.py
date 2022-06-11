@@ -1,11 +1,21 @@
 # Import the required libraries
+from distutils.log import error
+from lib2to3.pytree import convert
+from time import sleep
 from tkinter import *
 from tkinter import ttk
 from turtle import update
+import cv2
+import urllib.request
+import numpy as np
+from PIL import Image as PImage
+from PIL import ImageTk, ImageEnhance
+from sqlalchemy import false
+
 #from graph_operations import mazeArray as solvedMazeArray
 import photo_processing
 
-from matplotlib.pyplot import fill
+from matplotlib.pyplot import fill, pause
 
 # Create an instance of Tkinter Frame
 win = Tk()
@@ -43,6 +53,10 @@ mazeCanvas.grid(column=3, row=1)
 
 mazeCanvas['bg'] = '#000000'
 mazeCanvas['highlightthickness'] = 0
+
+url='http://192.168.1.25/cam-lo.jpg'
+ 
+cv2.namedWindow("live transmission", cv2.WINDOW_AUTOSIZE)
 
 
 #region mazeBlock Instantiation
@@ -185,28 +199,33 @@ mazeBlockList.extend([mazeBlock0, mazeBlock1, mazeBlock2, mazeBlock3, mazeBlock4
                     mazeBlock80, mazeBlock81, mazeBlock82, mazeBlock83, mazeBlock84, mazeBlock85, mazeBlock86, mazeBlock87, mazeBlock88, mazeBlock89,
                     mazeBlock90, mazeBlock91, mazeBlock92, mazeBlock93, mazeBlock94, mazeBlock95, mazeBlock96, mazeBlock97, mazeBlock98, mazeBlock99])
 
-def importMaze():
+def importMaze(checkVar):
     global solvedMazeArray
-    solvedMazeArray = photo_processing.importImage()
-    currBlockIndex = 0
-    for block in mazeBlockList:
-        i = ((int)(currBlockIndex / 10)) % 10
-        j = currBlockIndex % 10
-        color = ''
+    solvedMazeArray = photo_processing.importImage(checkVar)
 
-        if (solvedMazeArray[i][j] == 0):
-            color = 'black'
-        elif (solvedMazeArray[i][j] == 1):
-            color = 'white'
-        elif (solvedMazeArray[i][j] == 2):
-            color = 'green'
-        elif (solvedMazeArray[i][j] == 3):
-            color = 'red'
-        elif (solvedMazeArray[i][j] == 4):
-            color = 'white'        
+    if (type(solvedMazeArray) != str):
+        currBlockIndex = 0
+        for block in mazeBlockList:
+            i = ((int)(currBlockIndex / 10)) % 10
+            j = currBlockIndex % 10
+            color = ''
 
-        mazeCanvas.itemconfig(block, fill=color)
-        currBlockIndex += 1
+            if (solvedMazeArray[i][j] == 0):
+                color = 'black'
+            elif (solvedMazeArray[i][j] == 1):
+                color = 'white'
+            elif (solvedMazeArray[i][j] == 2):
+                color = 'green'
+            elif (solvedMazeArray[i][j] == 3):
+                color = 'red'
+            elif (solvedMazeArray[i][j] == 4):
+                color = 'white'        
+
+            mazeCanvas.itemconfig(block, fill=color)
+            currBlockIndex += 1
+    else:
+        error_label = Label(win, text=solvedMazeArray)
+        error_label.grid(column=2, row=0)
 
 def updateMaze():
     currBlockIndex = 0
@@ -230,9 +249,40 @@ def updateMaze():
         currBlockIndex += 1
 
 
-import_button = Button(win, text='Import Maze', command= importMaze)
+import_button = Button(win, text='Import Maze', command= lambda: importMaze(False))
+importvid_button = Button(win, text='Importvid Maze', command= lambda: importMaze(True))
 update_button = Button(win, text='Solve Maze', command= updateMaze)
+importvid_button.grid(column=2, row=4)
 import_button.grid(column=2, row=3)
 update_button.grid(column=3, row=3)
 
+def refreshVideo():
+    img_resp = urllib.request.urlopen(url)
+    imgnp = np.array(bytearray(img_resp.read()),dtype=np.uint8)
+    frame = cv2.imdecode(imgnp,-1)
+
+    convertcolor = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    convertpil = PImage.fromarray(convertcolor)
+    maze_display = convertpil.crop((0, 0, 209, 209))
+
+    test2 = maze_display.resize((630, 630))
+    enhancer = ImageEnhance.Brightness(test2)
+    test3 = enhancer.enhance(2)
+    test3.save("testimage.png")
+
+    tkimg[0] = ImageTk.PhotoImage(PImage.open("testimage.png"))
+    label.config(image=tkimg[0])
+    # img = ImageTk.PhotoImage(PImage.open("testimage.png"))
+    # label = Label(win, image = img)
+    # label.grid(column=2, row=1)
+
+    cv2.imshow("live transmission", frame)
+    win.after(50, refreshVideo)
+
+img = None
+tkimg = [None]
+label = Label(win, image = img)
+label.grid(column=2, row=1)
+
+refreshVideo()
 win.mainloop()

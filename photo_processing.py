@@ -5,8 +5,13 @@ from py import process
 import colorsys
 import graph_operations
 
-def importImage():
-    filename = filedialog.askopenfilename(title= 'Choose Maze PNG')
+def importImage(checkvar):
+    if (checkvar):
+        filename = "testimage.png"
+    else:
+        filename = filedialog.askopenfilename(title= 'Choose Maze PNG')
+        if (not filename.lower().endswith('.png')):
+            return "Wrong File Type"
 
     unprocessed_image = Image.open(filename)
     processed_image = unprocessed_image.convert("HSV")
@@ -187,4 +192,6 @@ def printSolvedMaze(solvedMazeArray):
     print(solvedMazeArray[8])
     print(solvedMazeArray[9])
 
+
+importImage(True)
 # printSolvedMaze(maze_array)
