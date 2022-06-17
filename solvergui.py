@@ -267,7 +267,7 @@ def refreshVideo():
 
     test2 = maze_display.resize((630, 630))
     enhancer = ImageEnhance.Brightness(test2)
-    test3 = enhancer.enhance(2)
+    test3 = enhancer.enhance(2.5)
     test3.save("testimage.png")
 
     tkimg[0] = ImageTk.PhotoImage(PImage.open("testimage.png"))
@@ -277,7 +277,7 @@ def refreshVideo():
     # label.grid(column=2, row=1)
 
     cv2.imshow("live transmission", frame)
-    win.after(50, refreshVideo)
+    win.after(10, refreshVideo)
 
 img = None
 tkimg = [None]

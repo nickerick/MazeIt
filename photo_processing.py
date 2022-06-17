@@ -152,32 +152,61 @@ def importImage(checkvar):
                         hsv_value80, hsv_value81, hsv_value82, hsv_value83, hsv_value84, hsv_value85, hsv_value86, hsv_value87, hsv_value88, hsv_value89,
                         hsv_value90, hsv_value91, hsv_value92, hsv_value93, hsv_value94, hsv_value95, hsv_value96, hsv_value97, hsv_value98, hsv_value99])
 
-    maze_array = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],                       
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]  
 
     currBlockIndex = 0
-    for hsv_value in hsv_value_list:
-        i = ((int)(currBlockIndex / 10)) % 10
-        j = currBlockIndex % 10
-        color_value = 0
-
-        if (hsv_value[0] == 0 and hsv_value[2] == 255):
+    if (checkvar):
+        maze_array = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],                       
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]  
+        for hsv_value in hsv_value_list:
+            i = ((int)(currBlockIndex / 10)) % 10
+            j = currBlockIndex % 10
             color_value = 1
-        elif (hsv_value[0] == 97):
-            color_value = 2
-        elif (hsv_value[0] == 253):
-            color_value = 3
 
-        maze_array[i][j] = color_value
-        currBlockIndex += 1
+            if (hsv_value[0] > 100 and hsv_value[0] < 140 and hsv_value[1] > 100):
+                color_value = 2
+            elif (hsv_value[0] > 200 and hsv_value[1] > 100 and hsv_value[2] > 100):
+                color_value = 3
+            elif (hsv_value[0] > 100 and hsv_value[1] < 145 and hsv_value[2] < 140):
+                color_value = 0
+
+            maze_array[i][j] = color_value
+            currBlockIndex += 1
+
+    else:
+        maze_array = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],                       
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]  
+
+        for hsv_value in hsv_value_list:
+            i = ((int)(currBlockIndex / 10)) % 10
+            j = currBlockIndex % 10
+            color_value = 0
+
+            if (hsv_value[0] == 0 and hsv_value[2] == 255):
+                color_value = 1
+            elif (hsv_value[0] == 97):
+                color_value = 2
+            elif (hsv_value[0] == 253):
+                color_value = 3
+
+            maze_array[i][j] = color_value
+            currBlockIndex += 1
+    printSolvedMaze(maze_array)
     return graph_operations.performGraphOperations(maze_array)
 
 def printSolvedMaze(solvedMazeArray):
@@ -193,5 +222,5 @@ def printSolvedMaze(solvedMazeArray):
     print(solvedMazeArray[9])
 
 
-importImage(True)
+#importImage(True)
 # printSolvedMaze(maze_array)
