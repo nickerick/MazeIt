@@ -8,4 +8,4 @@ Here is a demonstration video:
 
 I built it using Python and an ESP-32 Microcontroller. 
 
-![Component1.png](Component1.png)
+![process_diagram.png](process_diagram.png)
