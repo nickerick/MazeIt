@@ -7,3 +7,5 @@ Here is a demonstration video:
 ## How It Works
 
 I built it using Python and an ESP-32 Microcontroller. 
+
+![Component1.png](Component1.png)
