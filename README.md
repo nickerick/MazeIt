@@ -8,4 +8,4 @@ Here is a demonstration video:
 
 I built it using Python and an ESP-32 Microcontroller. 
 
-![process_diagram.png](process_diagram.png)
+![Process Diagram of Maze It](mazes/process_diagram.png)
